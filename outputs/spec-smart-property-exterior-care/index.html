@@ -160,6 +160,10 @@
           </div>
         </div>
         <form class="quote-form" data-quote-form>
+          <label class="bot-field" aria-hidden="true">
+            Website
+            <input name="website" type="text" autocomplete="off" tabindex="-1" />
+          </label>
           <label>
             Name
             <input name="name" type="text" autocomplete="name" placeholder="Your name" required />
@@ -183,6 +187,11 @@
             Project details
             <textarea name="details" rows="4" placeholder="Address, surfaces, timing, and anything important"></textarea>
           </label>
+          <label>
+            Human check
+            <span class="captcha-question" data-captcha-question></span>
+            <input name="human-check" type="number" inputmode="numeric" autocomplete="off" placeholder="Answer" required />
+          </label>
           <button class="button primary form-button" type="submit">Send Request</button>
           <p class="form-status" data-form-status role="status" aria-live="polite"></p>
         </form>
@@ -190,7 +199,7 @@
     </main>
 
     <footer class="site-footer">
-      <img class="footer-logo" src="assets/spec-logo-mountain.png" alt="SPEC logo" />
+      <img class="footer-logo" src="assets/spec-logo-mountain-header-outline.png" alt="SPEC logo" />
       <span>Pressure washing • Soft wash • Driveway cleaning</span>
     </footer>
 

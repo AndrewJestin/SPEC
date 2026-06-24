@@ -143,7 +143,7 @@ a {
   position: relative;
   width: min(720px, calc(100% - 36px));
   margin-left: clamp(18px, 7vw, 92px);
-  padding-top: 82px;
+  padding-top: 0;
   color: #fff;
 }
 
@@ -260,13 +260,28 @@ h1 {
   padding: 96px 0;
 }
 
+.services {
+  padding-top: 55px;
+  padding-bottom: 25px;
+}
+
 .section-heading {
   max-width: 760px;
   margin-bottom: 34px;
 }
 
+.services .section-heading {
+  width: 100%;
+  max-width: none;
+}
+
 .section-heading.compact {
   max-width: 620px;
+}
+
+.process .section-heading.compact {
+  width: 100%;
+  max-width: none;
 }
 
 h2 {
@@ -477,12 +492,26 @@ h2 {
   box-shadow: var(--shadow);
 }
 
+.bot-field {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 label {
   display: grid;
   gap: 8px;
   color: var(--ink);
   font-size: 0.92rem;
   font-weight: 800;
+}
+
+.captcha-question {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
 }
 
 input,
@@ -533,8 +562,8 @@ textarea:focus {
 .footer-logo {
   width: 190px;
   height: auto;
-  padding: 6px;
-  background: #fff;
+  padding: 0;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.28));
 }
 
 @media (max-width: 860px) {
@@ -604,6 +633,11 @@ textarea:focus {
   .section,
   .quote-section {
     padding: 70px 0;
+  }
+
+  .services {
+    padding-top: 55px;
+    padding-bottom: 25px;
   }
 
   .results {
