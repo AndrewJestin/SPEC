@@ -290,10 +290,55 @@ h2 {
 }
 
 .service-card {
+  position: relative;
+  overflow: hidden;
   min-height: 246px;
   padding: 24px;
   border: 1px solid var(--line);
-  background: var(--panel);
+  color: #fff;
+  background-color: var(--charcoal);
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 16px 44px rgba(19, 33, 31, 0.14);
+}
+
+.service-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(9, 19, 17, 0.24), rgba(9, 19, 17, 0.78)),
+    linear-gradient(90deg, rgba(9, 19, 17, 0.52), rgba(9, 19, 17, 0.08));
+  z-index: 0;
+}
+
+.service-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.service-pressure {
+  background-image: url("assets/service-01-pressure-washing.png");
+}
+
+.service-soft-house {
+  background-image: url("assets/service-02-soft-house-wash.png");
+}
+
+.service-driveway {
+  background-image: url("assets/service-03-driveway-cleaning.png");
+}
+
+.service-walkways {
+  background-image: url("assets/service-04-walkways-patios.png");
+}
+
+.service-roof {
+  background-image: url("assets/service-05-roof-cleaning.png");
+}
+
+.service-maintenance {
+  background-image: url("assets/service-06-property-maintenance.png");
 }
 
 .service-icon {
@@ -303,8 +348,8 @@ h2 {
   width: 42px;
   height: 42px;
   margin-bottom: 26px;
-  color: #fff;
-  background: var(--teal);
+  color: var(--ink);
+  background: var(--lime);
   font-weight: 800;
 }
 
@@ -319,6 +364,10 @@ h2 {
   margin: 0;
   color: var(--muted);
   line-height: 1.65;
+}
+
+.service-card p {
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .process {
