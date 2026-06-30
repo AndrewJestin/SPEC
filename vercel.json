@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/outputs/spec-smart-property-exterior-care/index.html"
+    },
+    {
+      "source": "/styles.css",
+      "destination": "/outputs/spec-smart-property-exterior-care/styles.css"
+    },
+    {
+      "source": "/script.js",
+      "destination": "/outputs/spec-smart-property-exterior-care/script.js"
+    },
+    {
+      "source": "/assets/:path*",
+      "destination": "/outputs/spec-smart-property-exterior-care/assets/:path*"
+    }
+  ]
+}
