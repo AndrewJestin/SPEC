@@ -95,7 +95,7 @@ a {
 .header-area {
   margin-top: 3px;
   color: rgba(255, 255, 255, 0.78);
-  font-size: clamp(0.66rem, 0.92vw, 0.78rem);
+  font-size: clamp(0.99rem, 1.38vw, 1.17rem);
   font-weight: 700;
 }
 
@@ -648,7 +648,7 @@ textarea:focus {
   }
 
   .header-area {
-    font-size: 0.64rem;
+    font-size: 0.96rem;
   }
 
   .site-nav.open {
