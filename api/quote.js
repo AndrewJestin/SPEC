@@ -97,7 +97,7 @@ function buildEmailText(payload) {
 
 async function sendEmail(payload) {
   const apiKey = process.env.RESEND_API_KEY;
-  const from = "SPEC Website <onboarding@resend.dev>";
+  const from = "SPEC Website <quote@spec-exterior.com>";
 
   if (!apiKey) {
     return { ok: false, reason: "missing-api-key" };
