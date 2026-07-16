@@ -97,7 +97,7 @@ function buildEmailText(payload) {
 
 async function sendEmail(payload) {
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM || "SPEC Website <onboarding@resend.dev>";
+  const from = process.env.EMAIL_FROM || "SPEC Website <quote@spec-exterior.com>";
 
   if (!apiKey) {
     return { ok: false, reason: "missing-api-key" };
@@ -119,7 +119,9 @@ async function sendEmail(payload) {
     }),
   });
 
-  return { ok: response.ok, status: response.status };
+  const responseText = await response.text();
+
+  return { ok: response.ok, status: response.status, body: responseText };
 }
 
 module.exports = async function handler(request, response) {
@@ -160,6 +162,12 @@ module.exports = async function handler(request, response) {
   });
 
   if (!emailResult.ok) {
+    console.error("Resend email failed", {
+      reason: emailResult.reason,
+      status: emailResult.status,
+      body: emailResult.body,
+    });
+
     return sendJson(response, 500, { message: "Could not send the request. Please contact us directly." });
   }
 
