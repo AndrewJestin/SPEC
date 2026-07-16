@@ -1,13 +1,81 @@
+const QUOTE_ENDPOINT = "/api/quote";
+
 const header = document.querySelector("[data-header]");
 const nav = document.querySelector("[data-nav]");
 const menuButton = document.querySelector("[data-menu-button]");
 const form = document.querySelector("[data-quote-form]");
 const formStatus = document.querySelector("[data-form-status]");
-const captchaQuestion = document.querySelector("[data-captcha-question]");
+const serviceSelect = form.querySelector("select[name='service']");
+const sizeSelect = form.querySelector("[data-size-select]");
+const sizeLabel = form.querySelector("[data-size-label]");
 const formOpenedAt = Date.now();
-const captchaA = Math.floor(Math.random() * 6) + 3;
-const captchaB = Math.floor(Math.random() * 5) + 2;
-const captchaAnswer = captchaA + captchaB;
+
+// The "Approximate size" field means something different depending on the
+// service — a house's square footage isn't the same scale as a patio's, and
+// window cleaning is priced by count, not area. Swap the field's label and
+// options based on the selected service instead of using one generic
+// small/medium/large scale for everything.
+const HOUSE_SCALE_SERVICES = new Set(["house_soft_wash", "roof_soft_wash", "gutter_cleaning", "gutter_brightening"]);
+const AREA_SCALE_SERVICES = new Set(["patio_cleaning", "deck_cleaning", "porch_cleaning", "pool_deck_cleaning"]);
+const COUNT_SCALE_SERVICES = new Set(["window_cleaning"]);
+
+const SIZE_FIELD_CONFIG = {
+  house: {
+    label: "Approximate home size",
+    options: [
+      { value: "", label: "Not sure" },
+      { value: "small", label: "Small house (~1,000–1,800 sq ft)" },
+      { value: "medium", label: "Medium house (~1,800–3,000 sq ft)" },
+      { value: "large", label: "Large house (~3,000–4,500 sq ft)" },
+    ],
+  },
+  area: {
+    label: "Approximate square footage",
+    options: [
+      { value: "", label: "Not sure" },
+      { value: "small", label: "Under 300 sq ft" },
+      { value: "medium", label: "300–500 sq ft" },
+      { value: "large", label: "500–800 sq ft" },
+    ],
+  },
+  count: {
+    label: "Number of windows",
+    options: [
+      { value: "", label: "Not sure" },
+      { value: "1-10", label: "1–10 windows" },
+      { value: "11-20", label: "11–20 windows" },
+      { value: "21-30", label: "21–30 windows" },
+      { value: "31-plus", label: "31+ windows" },
+    ],
+  },
+  default: {
+    label: "Approximate size",
+    options: [
+      { value: "", label: "Not sure" },
+      { value: "small", label: "Small" },
+      { value: "medium", label: "Medium" },
+      { value: "large", label: "Large" },
+    ],
+  },
+};
+
+function sizeCategoryForService(service) {
+  if (HOUSE_SCALE_SERVICES.has(service)) return "house";
+  if (AREA_SCALE_SERVICES.has(service)) return "area";
+  if (COUNT_SCALE_SERVICES.has(service)) return "count";
+  return "default";
+}
+
+function updateSizeField() {
+  const config = SIZE_FIELD_CONFIG[sizeCategoryForService(serviceSelect.value)];
+  sizeLabel.textContent = config.label;
+  sizeSelect.innerHTML = config.options
+    .map((opt) => `<option value="${opt.value}">${opt.label}</option>`)
+    .join("");
+}
+
+serviceSelect.addEventListener("change", updateSizeField);
+updateSizeField();
 
 const updateHeader = () => {
   header.classList.toggle("scrolled", window.scrollY > 20);
@@ -32,13 +100,11 @@ nav.addEventListener("click", (event) => {
   }
 });
 
-captchaQuestion.textContent = `What is ${captchaA} + ${captchaB}?`;
-
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const formData = new FormData(form);
   const botField = String(formData.get("website") || "").trim();
-  const humanAnswer = Number(formData.get("human-check"));
+  const turnstileToken = String(formData.get("cf-turnstile-response") || "");
   const filledTooFast = Date.now() - formOpenedAt < 2500;
 
   if (botField || filledTooFast) {
@@ -46,12 +112,41 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
-  if (humanAnswer !== captchaAnswer) {
-    formStatus.textContent = "Please complete the human check.";
+  if (!turnstileToken) {
+    formStatus.textContent = "Please complete the CAPTCHA.";
     return;
   }
 
-  formStatus.textContent = "Thanks. Your request is ready to be connected to your preferred booking method.";
+  const stories = formData.get("stories");
+  const payload = {
+    name: String(formData.get("name") || ""),
+    phone: String(formData.get("phone") || ""),
+    address: String(formData.get("address") || ""),
+    service: String(formData.get("service") || ""),
+    size: String(formData.get("size") || "") || null,
+    stories: stories ? Number(stories) : null,
+    details: String(formData.get("details") || ""),
+    turnstileToken,
+  };
+
+  formStatus.textContent = "Sending your request...";
+
+  try {
+    const response = await fetch(QUOTE_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const result = await response.json();
+    formStatus.textContent = response.ok
+      ? "Thanks. Your request has been sent. We'll follow up shortly."
+      : result.message || "Please try again or contact us directly.";
+  } catch (err) {
+    formStatus.textContent = "Please try again or contact us directly.";
+  }
+
   form.reset();
-  captchaQuestion.textContent = `What is ${captchaA} + ${captchaB}?`;
+  if (window.turnstile) {
+    window.turnstile.reset();
+  }
 });

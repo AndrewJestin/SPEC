@@ -169,26 +169,6 @@ a {
   color: #fff;
 }
 
-.opening-notice {
-  display: grid;
-  gap: 3px;
-  margin-bottom: 20px;
-  padding-left: 14px;
-  border-left: 4px solid var(--lime);
-  color: rgba(255, 255, 255, 0.88);
-  line-height: 1.35;
-}
-
-.opening-notice strong {
-  color: #fff;
-  font-size: 0.86rem;
-  letter-spacing: 0.08em;
-}
-
-.opening-notice span {
-  font-size: clamp(0.92rem, 1.3vw, 1.05rem);
-}
-
 .eyebrow {
   margin: 0 0 12px;
   color: var(--teal);
@@ -582,10 +562,8 @@ label {
   font-weight: 800;
 }
 
-.captcha-question {
-  color: var(--muted);
-  font-size: 0.86rem;
-  font-weight: 700;
+.captcha-wrap {
+  min-height: 65px;
 }
 
 input,

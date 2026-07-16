@@ -9,6 +9,7 @@
       content="SPEC Smart Property Exterior Care provides pressure washing, soft wash, driveway cleaning, house washing, and exterior property care."
     />
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   </head>
   <body>
     <header class="site-header" data-header>
@@ -39,10 +40,6 @@
         <img class="hero-image" src="assets/hero-blue-ridge-nc.png" alt="Freshly cleaned home exterior and driveway in Blue Ridge, North Carolina" />
         <div class="hero-overlay"></div>
         <div class="hero-content">
-          <div class="opening-notice" role="status">
-            <strong>OPENING SOON</strong>
-            <span>SPEC is preparing to serve the Blue Ridge Mountain communities.</span>
-          </div>
           <h1 class="hero-title">
             <span><span class="spec-initial">S</span>MART</span>
             <span><span class="spec-initial">P</span>ROPERTY</span>
@@ -165,9 +162,10 @@
           <p class="eyebrow">Free estimate</p>
           <h2>READY FOR A CLEANER EXTERIOR?</h2>
           <p>
-            Tell SPEC what needs cleaning. This demo form is ready to connect to your phone, email, CRM, or booking tool.
+            Tell SPEC what needs cleaning and we will follow up with the next step.
           </p>
           <div class="contact-lines">
+            <a href="tel:+18286007732">(828) 600-7732</a>
             <a href="mailto:info@spec-exterior.com">info@spec-exterior.com</a>
           </div>
         </div>
@@ -185,38 +183,62 @@
             <input name="phone" type="tel" autocomplete="tel" placeholder="Best callback number" required />
           </label>
           <label>
+            Property address
+            <input name="address" type="text" autocomplete="street-address" placeholder="Street address, town" required />
+          </label>
+          <label>
             Service
             <select name="service" required>
               <option value="">Choose a service</option>
-              <option>House Washing (Soft Wash)</option>
-              <option>Roof Cleaning (Soft Wash)</option>
-              <option>Driveway Cleaning</option>
-              <option>Sidewalk Cleaning</option>
-              <option>Patio Cleaning</option>
-              <option>Retaining Wall Cleaning</option>
-              <option>Pool Deck Cleaning</option>
-              <option>Porch Cleaning</option>
-              <option>Deck Cleaning</option>
-              <option>Fence Cleaning</option>
-              <option>Gutter Cleaning</option>
-              <option>Gutter Brightening</option>
-              <option>Window Cleaning</option>
-              <option>Spider Web Removal</option>
-              <option>Oxidation Removal</option>
-              <option>Rust Stain Removal</option>
-              <option>Red Clay Stain Removal</option>
-              <option>Oil Stain Treatment</option>
+              <option value="house_soft_wash">House Washing (Soft Wash)</option>
+              <option value="roof_soft_wash">Roof Cleaning (Soft Wash)</option>
+              <option value="driveway_cleaning">Driveway Cleaning</option>
+              <option value="sidewalk_cleaning">Sidewalk Cleaning</option>
+              <option value="patio_cleaning">Patio Cleaning</option>
+              <option value="retaining_wall_cleaning">Retaining Wall Cleaning</option>
+              <option value="pool_deck_cleaning">Pool Deck Cleaning</option>
+              <option value="porch_cleaning">Porch Cleaning</option>
+              <option value="deck_cleaning">Deck Cleaning</option>
+              <option value="fence_cleaning">Fence Cleaning</option>
+              <option value="gutter_cleaning">Gutter Cleaning</option>
+              <option value="gutter_brightening">Gutter Brightening</option>
+              <option value="window_cleaning">Window Cleaning</option>
+              <option value="spider_web_removal">Spider Web Removal</option>
+              <option value="oxidation_removal">Oxidation Removal</option>
+              <option value="rust_stain_removal">Rust Stain Removal</option>
+              <option value="red_clay_stain_removal">Red Clay Stain Removal</option>
+              <option value="oil_stain_treatment">Oil Stain Treatment</option>
+            </select>
+          </label>
+          <label>
+            <span data-size-label>Approximate size</span>
+            <select name="size" data-size-select>
+              <option value="">Not sure</option>
+              <option value="small">Small</option>
+              <option value="medium">Medium</option>
+              <option value="large">Large</option>
+            </select>
+          </label>
+          <label>
+            Stories
+            <select name="stories">
+              <option value="">Not sure</option>
+              <option value="1">1 story</option>
+              <option value="2">2 stories</option>
+              <option value="3">3+ stories</option>
             </select>
           </label>
           <label>
             Project details
-            <textarea name="details" rows="4" placeholder="Address, surfaces, timing, and anything important"></textarea>
+            <textarea name="details" rows="4" placeholder="Surfaces, condition, timing, and anything important"></textarea>
           </label>
-          <label>
-            Human check
-            <span class="captcha-question" data-captcha-question></span>
-            <input name="human-check" type="number" inputmode="numeric" autocomplete="off" placeholder="Answer" required />
-          </label>
+          <div class="captcha-wrap">
+            <div
+              class="cf-turnstile"
+              data-sitekey="0x4AAAAAAD3PbNyPmcglMkQe"
+              data-theme="light"
+            ></div>
+          </div>
           <button class="button primary form-button" type="submit">Send Request</button>
           <p class="form-status" data-form-status role="status" aria-live="polite"></p>
         </form>
