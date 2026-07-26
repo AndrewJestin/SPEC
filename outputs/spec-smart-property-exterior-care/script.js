@@ -112,7 +112,7 @@ function renderGoogleReviews(data) {
   if (!reviewsSummary || !reviewsPanel) return;
 
   if (!data.configured) {
-    reviewsSummary.innerHTML = "<strong>Google reviews are ready to connect.</strong><span>Add Google Places API settings in Vercel to show live reviews.</span>";
+    reviewsSummary.innerHTML = "<strong>Google Business Profile is active.</strong><span>Reviews are collected directly through Google's review system.</span>";
     return;
   }
 
@@ -168,7 +168,7 @@ async function loadGoogleReviews() {
     const data = await response.json();
     renderGoogleReviews(data);
   } catch (error) {
-    reviewsSummary.innerHTML = "<strong>Google reviews are temporarily unavailable.</strong><span>Use the buttons below to open Google directly.</span>";
+    reviewsSummary.innerHTML = "<strong>Google Business Profile is active.</strong><span>Reviews are collected directly through Google's review system.</span>";
   }
 }
 
