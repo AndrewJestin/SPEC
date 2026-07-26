@@ -1,10 +1,13 @@
 const QUOTE_ENDPOINT = "/api/quote";
+const GOOGLE_REVIEWS_ENDPOINT = "/api/google-reviews";
 
 const header = document.querySelector("[data-header]");
 const nav = document.querySelector("[data-nav]");
 const menuButton = document.querySelector("[data-menu-button]");
 const form = document.querySelector("[data-quote-form]");
 const formStatus = document.querySelector("[data-form-status]");
+const reviewsSummary = document.querySelector("[data-google-reviews-summary]");
+const reviewsPanel = document.querySelector("[data-google-reviews-panel]");
 const serviceSelect = form.querySelector("select[name='service']");
 const sizeSelect = form.querySelector("[data-size-select]");
 const sizeLabel = form.querySelector("[data-size-label]");
@@ -99,6 +102,77 @@ nav.addEventListener("click", (event) => {
     menuButton.setAttribute("aria-label", "Open navigation");
   }
 });
+
+function starsForRating(rating) {
+  const rounded = Math.round(Number(rating || 0));
+  return "★★★★★".slice(0, rounded).padEnd(5, "☆");
+}
+
+function renderGoogleReviews(data) {
+  if (!reviewsSummary || !reviewsPanel) return;
+
+  if (!data.configured) {
+    reviewsSummary.innerHTML = "<strong>Google reviews are ready to connect.</strong><span>Add Google Places API settings in Vercel to show live reviews.</span>";
+    return;
+  }
+
+  if (data.rating && data.userRatingCount) {
+    reviewsSummary.innerHTML = `<strong>${data.rating.toFixed(1)} on Google</strong><span>${data.userRatingCount} customer review${data.userRatingCount === 1 ? "" : "s"}</span>`;
+  } else {
+    reviewsSummary.innerHTML = "<strong>Google Business Profile is active.</strong><span>Customer reviews will appear here as they are published.</span>";
+  }
+
+  if (!Array.isArray(data.reviews) || data.reviews.length === 0) return;
+
+  reviewsPanel.innerHTML = "";
+  reviewsPanel.classList.add("has-reviews");
+
+  data.reviews.slice(0, 5).forEach((review) => {
+    const card = document.createElement("article");
+    card.className = "review-card";
+
+    const header = document.createElement("div");
+    header.className = "review-card-header";
+
+    const author = document.createElement(review.authorUri ? "a" : "strong");
+    author.textContent = review.authorName;
+    if (review.authorUri) {
+      author.href = review.authorUri;
+      author.target = "_blank";
+      author.rel = "noopener";
+    }
+
+    const rating = document.createElement("span");
+    rating.className = "review-stars";
+    rating.textContent = starsForRating(review.rating);
+
+    header.append(author, rating);
+
+    const text = document.createElement("p");
+    text.textContent = review.text || "Review published on Google.";
+
+    const meta = document.createElement("span");
+    meta.className = "review-meta";
+    meta.textContent = review.relativeTime || "Google review";
+
+    card.append(header, text, meta);
+    reviewsPanel.append(card);
+  });
+}
+
+async function loadGoogleReviews() {
+  if (!reviewsSummary || !reviewsPanel) return;
+
+  try {
+    const response = await fetch(GOOGLE_REVIEWS_ENDPOINT);
+    const data = await response.json();
+    renderGoogleReviews(data);
+  } catch (error) {
+    reviewsSummary.innerHTML = "<strong>Google reviews are temporarily unavailable.</strong><span>Use the buttons below to open Google directly.</span>";
+  }
+}
+
+loadGoogleReviews();
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();

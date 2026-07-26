@@ -631,6 +631,28 @@ textarea:focus {
   margin-top: 24px;
 }
 
+.reviews-summary {
+  display: grid;
+  gap: 4px;
+  margin-top: 18px;
+  padding-left: 14px;
+  border-left: 4px solid var(--lime);
+}
+
+.reviews-summary strong,
+.reviews-summary span {
+  display: block;
+}
+
+.reviews-summary strong {
+  font-size: 1.05rem;
+}
+
+.reviews-summary span {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .button.light {
   color: var(--ink);
   border-color: var(--line);
@@ -671,6 +693,50 @@ textarea:focus {
 .reviews-panel span {
   color: var(--muted);
   line-height: 1.55;
+}
+
+.reviews-panel.has-reviews {
+  grid-template-columns: 1fr;
+  align-items: stretch;
+}
+
+.review-card {
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.review-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.review-card-header a,
+.review-card-header strong {
+  font-weight: 800;
+}
+
+.review-stars {
+  color: #d6a800;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.review-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.review-meta {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
 }
 
 .site-footer {
