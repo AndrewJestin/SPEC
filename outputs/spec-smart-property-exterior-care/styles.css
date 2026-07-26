@@ -624,6 +624,19 @@ textarea:focus {
   line-height: 1.7;
 }
 
+.reviews-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.button.light {
+  color: var(--ink);
+  border-color: var(--line);
+  background: #fbfcfa;
+}
+
 .reviews-panel {
   display: grid;
   grid-template-columns: auto 1fr;
