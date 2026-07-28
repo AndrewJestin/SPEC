@@ -2,7 +2,7 @@ function sendJson(response, statusCode, body) {
   response.status(statusCode).json(body);
 }
 
-let cachedPlaceId = "";
+let cachedPlace = null;
 
 function normalizeReview(review) {
   const attribution = review.authorAttribution || {};
@@ -31,8 +31,19 @@ function isSpecPlace(place) {
   return name.includes("smart property exterior care") || name.includes("spec smart property exterior care");
 }
 
-async function findPlaceId(apiKey) {
-  if (cachedPlaceId) return cachedPlaceId;
+function formatPlaceResponse(place) {
+  return {
+    configured: true,
+    name: place.displayName?.text || "SPEC Smart Property Exterior Care",
+    rating: place.rating || null,
+    userRatingCount: place.userRatingCount || 0,
+    googleMapsUri: place.googleMapsUri || "",
+    reviews: Array.isArray(place.reviews) ? place.reviews.map(normalizeReview) : [],
+  };
+}
+
+async function findPlace(apiKey) {
+  if (cachedPlace) return cachedPlace;
 
   const queries = [
     process.env.GOOGLE_PLACE_QUERY,
@@ -48,7 +59,7 @@ async function findPlaceId(apiKey) {
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.googleMapsUri",
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.googleMapsUri,places.rating,places.userRatingCount,places.reviews",
       },
       body: JSON.stringify({ textQuery, maxResultCount: 5 }),
     });
@@ -67,13 +78,13 @@ async function findPlaceId(apiKey) {
     const places = Array.isArray(data.places) ? data.places : [];
     const match = places.find(isSpecPlace);
 
-    if (match?.id) {
-      cachedPlaceId = match.id;
-      return cachedPlaceId;
+    if (match) {
+      cachedPlace = match;
+      return cachedPlace;
     }
   }
 
-  return "";
+  return null;
 }
 
 module.exports = async function handler(request, response) {
@@ -92,14 +103,20 @@ module.exports = async function handler(request, response) {
     });
   }
 
-  const placeId = process.env.GOOGLE_PLACE_ID || await findPlaceId(apiKey);
+  const configuredPlaceId = process.env.GOOGLE_PLACE_ID;
+  const searchedPlace = configuredPlaceId ? null : await findPlace(apiKey);
+  const placeId = configuredPlaceId || searchedPlace?.id;
 
-  if (!placeId) {
+  if (!placeId && !searchedPlace) {
     return sendJson(response, 200, {
       configured: true,
       message: "Google Business Profile was not found by Places search yet.",
       reviews: [],
     });
+  }
+
+  if (!configuredPlaceId && searchedPlace) {
+    return sendJson(response, 200, formatPlaceResponse(searchedPlace));
   }
 
   const fieldMask = [
@@ -135,11 +152,6 @@ module.exports = async function handler(request, response) {
   }
 
   return sendJson(response, 200, {
-    configured: true,
-    name: data.displayName?.text || "SPEC Smart Property Exterior Care",
-    rating: data.rating || null,
-    userRatingCount: data.userRatingCount || 0,
-    googleMapsUri: data.googleMapsUri || "",
-    reviews: Array.isArray(data.reviews) ? data.reviews.map(normalizeReview) : [],
+    ...formatPlaceResponse(data),
   });
 };
