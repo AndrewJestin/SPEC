@@ -31,6 +31,10 @@ function isSpecPlace(place) {
   return name.includes("smart property exterior care") || name.includes("spec smart property exterior care");
 }
 
+function isValidPlaceId(placeId) {
+  return /^ChIJ[A-Za-z0-9_-]+$/.test(String(placeId || "").trim());
+}
+
 function formatPlaceResponse(place) {
   return {
     configured: true,
@@ -103,7 +107,7 @@ module.exports = async function handler(request, response) {
     });
   }
 
-  const configuredPlaceId = process.env.GOOGLE_PLACE_ID;
+  const configuredPlaceId = isValidPlaceId(process.env.GOOGLE_PLACE_ID) ? process.env.GOOGLE_PLACE_ID.trim() : "";
   const searchedPlace = configuredPlaceId ? null : await findPlace(apiKey);
   const placeId = configuredPlaceId || searchedPlace?.id;
 
@@ -143,6 +147,12 @@ module.exports = async function handler(request, response) {
       status: placesResponse.status,
       body: data,
     });
+
+    const fallbackPlace = await findPlace(apiKey);
+
+    if (fallbackPlace) {
+      return sendJson(response, 200, formatPlaceResponse(fallbackPlace));
+    }
 
     return sendJson(response, 200, {
       configured: true,
