@@ -99,7 +99,6 @@ module.exports = async function handler(request, response) {
     return sendJson(response, 405, { message: "Method not allowed." });
   }
 
-  const debug = request.query?.debug === "1";
   const apiKey = process.env.GOOGLE_PLACES_API_KEY;
 
   if (!apiKey) {
@@ -155,17 +154,6 @@ module.exports = async function handler(request, response) {
 
     if (fallbackPlace) {
       return sendJson(response, 200, formatPlaceResponse(fallbackPlace));
-    }
-
-    if (debug) {
-      return sendJson(response, 200, {
-        configured: true,
-        message: "Google reviews debug response.",
-        placeId,
-        googleStatus: placesResponse.status,
-        googleError: data.error?.message || data.error_message || data.message || "Unknown Google API error.",
-        reviews: [],
-      });
     }
 
     return sendJson(response, 200, {
