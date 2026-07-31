@@ -108,6 +108,24 @@ function starsForRating(rating) {
   return "★★★★★".slice(0, rounded).padEnd(5, "☆");
 }
 
+function formatReviewTime(value) {
+  const time = String(value || "").trim();
+  if (!time) return "Google review";
+
+  const normalized = time.toLowerCase();
+  if (normalized === "in the last week") return "Last week";
+  if (normalized === "in the last month") return "Last month";
+  if (normalized === "in the last year") return "Last year";
+  if (normalized.startsWith("in the last ")) {
+    return time.replace(/^in the last\s+/i, "Last ");
+  }
+  if (normalized.startsWith("in ")) {
+    return time.replace(/^in\s+/i, "");
+  }
+
+  return time.charAt(0).toUpperCase() + time.slice(1);
+}
+
 function renderGoogleReviews(data) {
   if (!reviewsSummary || !reviewsPanel) return;
 
@@ -161,7 +179,7 @@ function renderGoogleReviews(data) {
 
     const meta = document.createElement("span");
     meta.className = "review-meta";
-    meta.textContent = review.relativeTime || "Google review";
+    meta.textContent = formatReviewTime(review.relativeTime);
 
     reviewerText.append(author, meta);
     reviewer.append(avatar, reviewerText);
