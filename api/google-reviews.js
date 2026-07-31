@@ -109,9 +109,7 @@ module.exports = async function handler(request, response) {
     });
   }
 
-  const configuredPlaceId = isValidPlaceId(process.env.GOOGLE_PLACE_ID)
-    ? process.env.GOOGLE_PLACE_ID.trim()
-    : DEFAULT_GOOGLE_PLACE_ID;
+  const configuredPlaceId = DEFAULT_GOOGLE_PLACE_ID;
   const searchedPlace = configuredPlaceId ? null : await findPlace(apiKey);
   const placeId = configuredPlaceId || searchedPlace?.id;
 
