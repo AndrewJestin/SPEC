@@ -134,6 +134,23 @@ function renderGoogleReviews(data) {
     const header = document.createElement("div");
     header.className = "review-card-header";
 
+    const reviewer = document.createElement("div");
+    reviewer.className = "reviewer";
+
+    const avatar = review.authorPhoto ? document.createElement("img") : document.createElement("span");
+    avatar.className = "reviewer-avatar";
+    if (review.authorPhoto) {
+      avatar.src = review.authorPhoto;
+      avatar.alt = "";
+      avatar.loading = "lazy";
+      avatar.referrerPolicy = "no-referrer";
+    } else {
+      avatar.textContent = (review.authorName || "G").trim().charAt(0).toUpperCase();
+    }
+
+    const reviewerText = document.createElement("div");
+    reviewerText.className = "reviewer-text";
+
     const author = document.createElement(review.authorUri ? "a" : "strong");
     author.textContent = review.authorName;
     if (review.authorUri) {
@@ -142,20 +159,23 @@ function renderGoogleReviews(data) {
       author.rel = "noopener";
     }
 
-    const rating = document.createElement("span");
-    rating.className = "review-stars";
-    rating.textContent = starsForRating(review.rating);
-
-    header.append(author, rating);
-
-    const text = document.createElement("p");
-    text.textContent = review.text || "Review published on Google.";
-
     const meta = document.createElement("span");
     meta.className = "review-meta";
     meta.textContent = review.relativeTime || "Google review";
 
-    card.append(header, text, meta);
+    reviewerText.append(author, meta);
+    reviewer.append(avatar, reviewerText);
+
+    const rating = document.createElement("span");
+    rating.className = "review-stars";
+    rating.textContent = starsForRating(review.rating);
+
+    header.append(reviewer, rating);
+
+    const text = document.createElement("p");
+    text.textContent = review.text || "Review published on Google.";
+
+    card.append(header, text);
     reviewsPanel.append(card);
   });
 }

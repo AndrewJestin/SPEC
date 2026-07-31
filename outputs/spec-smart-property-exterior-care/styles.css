@@ -740,6 +740,38 @@ textarea:focus {
   font-weight: 800;
 }
 
+.reviewer {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 12px;
+}
+
+.reviewer-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: #fff;
+  background: #075dc4;
+  font-size: 1rem;
+  font-weight: 800;
+  object-fit: cover;
+}
+
+.reviewer-text {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.reviewer-text a,
+.reviewer-text strong {
+  overflow-wrap: anywhere;
+}
+
 .review-stars {
   color: #d6a800;
   font-size: 1rem;
