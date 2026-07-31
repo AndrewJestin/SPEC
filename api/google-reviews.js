@@ -16,6 +16,7 @@ function normalizeReview(review) {
     authorPhoto: attribution.photoUri || attribution.photoURI || "",
     rating: review.rating || null,
     text: text.text || "",
+    publishTime: review.publishTime || "",
     relativeTime: review.relativePublishTimeDescription || "",
     googleMapsUri: review.googleMapsUri || "",
   };
