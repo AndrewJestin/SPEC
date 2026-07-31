@@ -659,6 +659,12 @@ textarea:focus {
   background: #fbfcfa;
 }
 
+.reviews-media {
+  display: grid;
+  gap: 18px;
+}
+
+.reviews-map,
 .reviews-panel {
   min-height: 340px;
   border: 1px solid var(--line);
@@ -672,6 +678,26 @@ textarea:focus {
   height: 100%;
   min-height: 340px;
   border: 0;
+}
+
+.reviews-panel {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  align-items: center;
+  min-height: auto;
+  padding: 24px;
+}
+
+.google-mark {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  color: #fff;
+  background: #075dc4;
+  font-size: 1.45rem;
+  font-weight: 800;
 }
 
 .reviews-panel strong,
@@ -690,11 +716,8 @@ textarea:focus {
 }
 
 .reviews-panel.has-reviews {
-  display: grid;
   grid-template-columns: 1fr;
   align-items: stretch;
-  gap: 18px;
-  padding: 24px;
 }
 
 .review-card {
